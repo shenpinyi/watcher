@@ -1,5 +1,7 @@
 package com.tpg.onewatcher.message;
 
+import java.sql.SQLException;
+
 import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,9 +57,14 @@ public class SmsSender {
 		             sms.getShortMessage(),
 		             sms.getStatus(),
 		             sms.getEnteredBy());
+			dataSource.close();
 			log.info("[0] SMS sent succeed to " + sms.getDestinationAddr() + ". Msg:" + sms.getShortMessage());
 			return 0;
 		} catch (Exception e) {
+			try {
+				dataSource.close();
+			} catch (SQLException e1) {
+			}
 			log.error("[1] SMS sent failed for Reason: " + e.getMessage());
 			return 1;
 		}
