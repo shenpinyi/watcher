@@ -44,19 +44,18 @@ public class SmsSender {
 					sms.getEnteredByNotify(), sms.getAdditionalNotifyAddress(), sms.getSystem(), sms.getPriority(),
 					sms.getDestinationAddr(), sms.getRegisteredDelivery(), sms.getShortMessage(), sms.getStatus(),
 					sms.getEnteredBy());
-			dataSource.close();
+			
 			log.info("[0] SMS sent succeed to " + sms.getDestinationAddr() + ". Msg:" + sms.getShortMessage());
 			return 0;
 		} catch (Exception e) {
-			try {
-				dataSource.close();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
 			log.error("[1] SMS sent failed for Reason: " + e.getMessage());
 			return 1;
 		} finally {
-
+			try {
+				dataSource.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

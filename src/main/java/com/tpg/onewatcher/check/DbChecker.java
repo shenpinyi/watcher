@@ -1,5 +1,6 @@
 package com.tpg.onewatcher.check;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,14 +28,13 @@ public class DbChecker implements Checker {
 		int code = 0;
 		
 		for (DataSourceSetting setting : dataSourceSettings.getDatasources()) {
+			BasicDataSource dataSource = new BasicDataSource();
+			dataSource.setUrl(setting.getUrl());
+			dataSource.setUsername(setting.getUsername());
+			dataSource.setPassword(setting.getPassword());
+			dataSource.setDriverClassName(setting.getDriverClassName());
+			dataSources.add(dataSource);
 			try{
-				BasicDataSource dataSource = new BasicDataSource();
-				dataSource.setUrl(setting.getUrl());
-				dataSource.setUsername(setting.getUsername());
-				dataSource.setPassword(setting.getPassword());
-				dataSource.setDriverClassName(setting.getDriverClassName());
-				dataSources.add(dataSource);
-
 				JdbcTemplate myJdbcTemplate = new JdbcTemplate(dataSource);
 
 				List <Map <String, Object>> results = myJdbcTemplate.queryForList(setting.getSql());
@@ -51,6 +51,12 @@ public class DbChecker implements Checker {
 				code = 2;
 				buff.append("DB " + setting.getName() + 
 						" checks error! Exception: " + e.getMessage() + "\r\n"); 
+			} finally {
+				try {
+					dataSource.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		
