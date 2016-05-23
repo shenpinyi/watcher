@@ -1,43 +1,26 @@
 package com.tpg.onewatcher.check;
 
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.tpg.onewatcher.configuration.DataSourceSetting;
-import com.tpg.onewatcher.configuration.Setting;
-
 @Component(value = "walletChecker")
 public class WalletChecker implements Checker {
-	
+
 	@Autowired
-	private Setting setting;
+	private JdbcTemplate walletJdbcTemplate;
 	
 	@Value("${my.check.wallet.max_idle_minutes}")
 	private int MAX_IDLE_MINUTES;
 	
 	@Override
 	public CheckResult check() {
-		
-		DataSourceSetting ds = setting.getDataSourceSettingByName("wallet");
-		if (setting == null) {
-			return new CheckResult(6, "No Wallet DB configuration found.");
-		}
-
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUrl(ds.getUrl());
-		dataSource.setUsername(ds.getUsername());
-		dataSource.setPassword(ds.getPassword());
-		dataSource.setDriverClassName(ds.getDriverClassName());
-
-		JdbcTemplate myJdbcTemplate = new JdbcTemplate(dataSource);
+		JdbcTemplate myJdbcTemplate = walletJdbcTemplate;
 		try {
 			Calendar c = Calendar.getInstance();
 			c.add(Calendar.MINUTE, - MAX_IDLE_MINUTES);
@@ -76,11 +59,6 @@ public class WalletChecker implements Checker {
 		} catch (Exception e) {
 			return new CheckResult(5, "Exception when executing query from Wallet DB. Exception: " + e.getMessage());
 		} finally {
-			try {
-				dataSource.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 }

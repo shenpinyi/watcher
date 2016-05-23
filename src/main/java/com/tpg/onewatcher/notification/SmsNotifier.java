@@ -45,7 +45,7 @@ public class SmsNotifier implements Notifier {
 				sms.setEnteredByNotify(msgSetting.getEnteredByNotify());
 				sms.setPriority(msgSetting.getPriority());
 				sms.setRegisteredDelivery(msgSetting.getRegisteredDelivery());
-				sms.setShortMessage(msgSetting.getShortMessage());
+				sms.setShortMessage(msgSetting.getShortMessage() + alarm.getElementId());
 				sms.setStatus(msgSetting.getStatus());
 				sms.setSystem(msgSetting.getSystem());
 				smsSender.send(sms);

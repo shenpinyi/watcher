@@ -22,6 +22,10 @@ public class CheckWallet {
 	private Checker walletChecker;
 	
 	@Autowired
+	@Qualifier("httpChecker")
+	private Checker httpChecker;
+	
+	@Autowired
 	private AlarmMgt alarmMgt;
 
 	@Scheduled(cron = "${my.scheduler.wallet.cron}")

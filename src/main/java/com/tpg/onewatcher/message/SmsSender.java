@@ -1,39 +1,36 @@
 package com.tpg.onewatcher.message;
 
-import java.sql.SQLException;
-
-import org.apache.commons.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import com.tpg.onewatcher.configuration.DataSourceSetting;
-import com.tpg.onewatcher.configuration.Setting;
-
 @Component
 public class SmsSender {
 
 	private static Logger log = LoggerFactory.getLogger(SmsSender.class);
 
+//	@Autowired
+//	private Setting setting;
+	
 	@Autowired
-	private Setting setting;
+	private JdbcTemplate smsJdbcTemplate;
 
 	public int send(SmsEntity sms) {
 
-		DataSourceSetting ds = setting.getDataSourceSettingByName("sms");
-		if (setting == null) {
-			return 1;
-		}
-
-		BasicDataSource dataSource = new BasicDataSource();
-		dataSource.setUrl(ds.getUrl());
-		dataSource.setUsername(ds.getUsername());
-		dataSource.setPassword(ds.getPassword());
-		dataSource.setDriverClassName(ds.getDriverClassName());
-
-		JdbcTemplate smsJdbcTemplate = new JdbcTemplate(dataSource);
+//		DataSourceSetting ds = setting.getDataSourceSettingByName("sms");
+//		if (setting == null) {
+//			return 1;
+//		}
+//
+//		BasicDataSource dataSource = new BasicDataSource();
+//		dataSource.setUrl(ds.getUrl());
+//		dataSource.setUsername(ds.getUsername());
+//		dataSource.setPassword(ds.getPassword());
+//		dataSource.setDriverClassName(ds.getDriverClassName());
+//
+//		JdbcTemplate smsJdbcTemplate = new JdbcTemplate(dataSource);
 
 		try {
 			smsJdbcTemplate.update(
@@ -51,11 +48,11 @@ public class SmsSender {
 			log.error("[1] SMS sent failed for Reason: " + e.getMessage());
 			return 1;
 		} finally {
-			try {
-				dataSource.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+//			try {
+//				dataSource.close();
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
 		}
 	}
 

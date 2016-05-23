@@ -15,6 +15,8 @@ public class Setting {
 	
 	private MailSetting mail;
 	
+	private List<WebServerSetting> webservers = new ArrayList<>();
+	
 	public List<DataSourceSetting> getDatasources() {
 		return datasources;
 	}
@@ -50,8 +52,18 @@ public class Setting {
 		return null;
 	}
 
+	
+	public List<WebServerSetting> getWebservers() {
+		return webservers;
+	}
+
+	public void setWebservers(List<WebServerSetting> webservers) {
+		this.webservers = webservers;
+	}
+
 	@Override
 	public String toString() {
-		return "Settings [datasources=" + datasources + ", sms=" + sms + "]";
+		return "Setting [datasources=" + datasources + ", sms=" + sms + ", mail=" + mail + ", webservers=" + webservers
+				+ "]";
 	}
 }
